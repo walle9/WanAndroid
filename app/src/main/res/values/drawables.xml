@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="bottombar_img">
+        <item>@drawable/bottombar_first_selector</item>
+        <item>@drawable/bottombar_second_selector</item>
+        <item>@drawable/bottombar_third_selector</item>
+        <item>@drawable/bottombar_forth_selector</item>
+    </array>
+</resources>

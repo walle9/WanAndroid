@@ -1,0 +1,36 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowIsTranslucent">true</item><!--窗口背景半透明,防止侧滑删除黑屏-->
+    </style>
+
+    <style name="SplashTheme" parent="AppTheme">
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:windowBackground">@drawable/splash_bg</item>
+        <item name="android:windowIsTranslucent">false</item><!--为true时窗口背景透明会觉得启动卡顿-->
+    </style>
+
+    <style name="MainTheme" parent="AppTheme">
+        <item name="android:windowIsTranslucent">false</item><!--为true时窗口背景透明会让跳转到主页透视到桌面上-->
+    </style>
+
+    <!--1dp高度的横线-->
+    <style name="LineHorizontal">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/line</item>
+    </style>
+
+
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
+    </style>
+
+</resources>

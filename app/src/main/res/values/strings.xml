@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">美喵</string>
+    <string name="code_tip">错误码:%1$d,%2$s</string>
+    <string name="press_again_exit">再按一次退出</string>
+
+    <string-array name="bottombar_title">
+        <item>首页</item>
+        <item>新闻</item>
+        <item>美图</item>
+        <item>我的</item>
+    </string-array>
+
+    <!--paramenter-->
+    <string name="city_bengbu">蚌埠</string>
+    <string name="looker_count">5</string>
+
+</resources>
