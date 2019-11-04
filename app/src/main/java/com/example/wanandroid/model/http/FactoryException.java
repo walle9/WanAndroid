@@ -1,7 +1,9 @@
 package com.example.wanandroid.model.http;
 
 
+import com.example.wanandroid.utils.SystemUtil;
 import com.google.gson.JsonParseException;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
@@ -10,6 +12,8 @@ import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.text.ParseException;
+
+import javax.net.ssl.SSLException;
 
 import retrofit2.HttpException;
 
@@ -37,21 +41,17 @@ class FactoryException {
      */
     static ApiException analysisExcetpion(Throwable e) {
         ApiException apiException = new ApiException(e);
+        if (!SystemUtil.isNetworkConnected()) {
 
-        if (e instanceof HttpException) {
+            apiException.setCode(ErrorInfo.NET_ERROR);
+            apiException.setMessage(ErrorInfo.NET_ERROR_MSG);
+
+        } else if (e instanceof HttpException) {
+
             int code = ((HttpException) e).code();
             apiException.setCode(code);
             apiException.setMessage(ErrorInfo.HTTP_ERROR_MSG);
 
-        } else if (e instanceof ServerDefinedException) {
-
-            if (((ServerDefinedException) e).getCode()== ErrorInfo.EXIT) {
-                EventBus.getDefault().post("exit");
-            }
-
-            apiException.setCode(((ServerDefinedException) e).getCode());
-            apiException.setMessage(((ServerDefinedException) e).getMsg());
-            
         } else if (e instanceof UnknownHostException) {
 
             apiException.setCode(ErrorInfo.UNKOWNHOST_ERROR);
@@ -72,13 +72,22 @@ class FactoryException {
             apiException.setCode(ErrorInfo.JSON_ERROR);
             apiException.setMessage(ErrorInfo.JSON_ERROR_MSG);
 
+        } else if (e instanceof SSLException) {
+
+            apiException.setCode(ErrorInfo.SSL_ERROR);
+            apiException.setMessage(ErrorInfo.SSL_ERROR_MSG);
+
         } else {
+            switch (((DefinedException) e).getCode()) {
+                case ErrorInfo.EXIT:
+                    EventBus.getDefault().post("exit");
+                    break;
+                default:
+                    apiException.setCode(((DefinedException) e).getCode());
+                    apiException.setMessage(ErrorInfo.UNKNOWN_ERROR_MSG);
 
-            apiException.setCode(ErrorInfo.UNKNOWN_ERROR);
-            apiException.setMessage(e.getMessage());
-
+            }
         }
-
         return apiException;
     }
 

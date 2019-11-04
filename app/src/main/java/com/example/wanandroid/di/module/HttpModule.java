@@ -6,10 +6,15 @@ import com.example.wanandroid.di.qualifier.ApiUrl;
 import com.example.wanandroid.model.http.api.ProtocolHttp;
 import com.example.wanandroid.model.http.api.HttpApi;
 import com.example.wanandroid.utils.SystemUtil;
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;
@@ -18,6 +23,9 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -62,7 +70,14 @@ public class HttpModule {
 
     @Provides
     @Singleton
-    public OkHttpClient provideClient(OkHttpClient.Builder builder) {
+    public PersistentCookieJar providesClearableCookieJar() {
+        return new PersistentCookieJar(new SetCookieCache(),new SharedPrefsCookiePersistor(MyApplication.getInstance()));
+    }
+
+
+    @Provides
+    @Singleton
+    public OkHttpClient provideClient(OkHttpClient.Builder builder,PersistentCookieJar cookieJar) {
 
         if (BuildConfig.DEBUG) {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(message ->
@@ -70,38 +85,44 @@ public class HttpModule {
             builder.addInterceptor(httpLoggingInterceptor);
         }
 
-        Cache cache = new Cache(new File(MyApplication.getInstance().getExternalCacheDir(), "okhttpcache"), 10 * 1024 * 1024);
+        builder.cookieJar(cookieJar);
 
-        Interceptor cacheInterceptor = chain -> {
+        /*Cache cache = new Cache(new File(MyApplication.getInstance().getExternalCacheDir(), "okhttpcache"), 10 * 1024 * 1024);
+
+        //有网时候的缓存
+        Interceptor NetCacheInterceptor = chain -> {
             Request request = chain.request();
-            if (!SystemUtil.isNetworkConnected()) {
-                request = request.newBuilder()
-                        .cacheControl(CacheControl.FORCE_CACHE)
-                        .build();
-            }
             Response response = chain.proceed(request);
-            if (SystemUtil.isNetworkConnected()) {
-                int maxAge = 0;
-                // 有网络时, 不缓存, 最大保存时长为0
-                response.newBuilder()
-                        .header("Cache-Control", "public, max-age=" + maxAge)
-                        .removeHeader("Pragma")
-                        .build();
-            } else {
-                // 无网络时，设置超时为4周
-                int maxStale = 60 * 60 * 24 * 28;
-                response.newBuilder()
-                        .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
-                        .removeHeader("Pragma")
-                        .build();
-            }
-            return response;
+            int onlineCacheTime = 0;//在线的时候的缓存过期时间，如果想要不缓存，直接时间设置为0
+            return response.newBuilder()
+                    .header("Cache-Control", "public, max-age="+onlineCacheTime)
+                    .removeHeader("Pragma")
+                    .build();
         };
 
+        //没有网时候的缓存
+        final Interceptor OfflineCacheInterceptor = chain -> {
+            Request request = chain.request();
+            if (!SystemUtil.isNetworkConnected()) {
+                int offlineCacheTime = 30;//离线的时候的缓存的过期时间
+                request = request.newBuilder()
+//                        .cacheControl(new CacheControl
+//                                .Builder()
+//                                .maxStale(60,TimeUnit.SECONDS)
+//                                .onlyIfCached()
+//                                .build()
+//                        ) 两种方式结果是一样的，写法不同
+                        .header("Cache-Control", "public, only-if-cached, max-stale=" + offlineCacheTime)
+                        .build();
+            }
+            return chain.proceed(request);
+        };
+
+
         //设置缓存
-        builder.addNetworkInterceptor(cacheInterceptor);
-        builder.addInterceptor(cacheInterceptor);
-        builder.cache(cache);
+        builder.addNetworkInterceptor(NetCacheInterceptor);
+        builder.addInterceptor(OfflineCacheInterceptor);
+        builder.cache(cache);*/
 
         return builder.build();
     }

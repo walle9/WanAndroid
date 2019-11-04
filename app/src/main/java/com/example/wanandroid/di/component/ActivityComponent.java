@@ -1,14 +1,16 @@
 package com.example.wanandroid.di.component;
 
-import com.example.wanandroid.view.activity.MainActivity;
 import com.example.wanandroid.di.module.ActivityModule;
 import com.example.wanandroid.di.scope.ActivityScope;
-import com.example.wanandroid.view.activity.WeatherActivity;
-import com.example.wanandroid.view.fragment.FirstTabFragment;
-import com.example.wanandroid.view.fragment.ForthTabFragment;
-import com.example.wanandroid.view.fragment.LookerFragment;
-import com.example.wanandroid.view.fragment.SecondTabFragment;
-import com.example.wanandroid.view.fragment.ThirdTabFragment;
+import com.example.wanandroid.ui.activity.ArticleActivity;
+import com.example.wanandroid.ui.activity.LoginActivity;
+import com.example.wanandroid.ui.activity.WeatherActivity;
+import com.example.wanandroid.ui.fragment.FifthTabFragment;
+import com.example.wanandroid.ui.fragment.FirstTabFragment;
+import com.example.wanandroid.ui.fragment.ForthTabFragment;
+import com.example.wanandroid.ui.fragment.LookerFragment;
+import com.example.wanandroid.ui.fragment.SecondTabFragment;
+import com.example.wanandroid.ui.fragment.ThirdTabFragment;
 
 import dagger.Component;
 
@@ -28,12 +30,15 @@ import dagger.Component;
 @Component(dependencies = AppComponent.class, modules = ActivityModule.class)
 public interface ActivityComponent {
 
-    void inject(WeatherActivity activity);
-
     void inject(FirstTabFragment fragment);
     void inject(SecondTabFragment fragment);
     void inject(ThirdTabFragment fragment);
     void inject(ForthTabFragment fragment);
+    void inject(FifthTabFragment fragment);
+    void inject(LoginActivity activity);
+    void inject(ArticleActivity activity);
+
+    void inject(WeatherActivity activity);
     void inject(LookerFragment fragment);
 
 }

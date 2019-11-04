@@ -10,7 +10,7 @@
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:srlAccentColor="@color/colorTextContent"
+        app:srlAccentColor="@color/colorTextBody"
         app:srlPrimaryColor="@android:color/transparent"
         app:srlEnableAutoLoadMore="true"
         app:srlEnableLoadMoreWhenContentNotFull="false"
@@ -44,7 +44,7 @@
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:srlAccentColor="@color/colorTextContent"
+            app:srlAccentColor="@color/colorTextBody"
             app:srlClassicsSpinnerStyle="Translate"/>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>

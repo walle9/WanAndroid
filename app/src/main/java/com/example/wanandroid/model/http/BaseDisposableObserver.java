@@ -3,6 +3,7 @@ package com.example.wanandroid.model.http;
 import com.example.wanandroid.R;
 import com.example.wanandroid.base.BaseView;
 import com.example.wanandroid.base.MyApplication;
+import com.orhanobut.logger.Logger;
 
 import io.reactivex.observers.DisposableObserver;
 
@@ -32,10 +33,8 @@ public abstract class BaseDisposableObserver<T> extends DisposableObserver<T> {
             return;
         }
         baseView.hideLoading();
-
         ApiException apiException = FactoryException.analysisExcetpion(e);
-        baseView.showTipMsg(MyApplication.getInstance().getResources().getString(R.string.code_tip,apiException.getCode(),apiException.getMessage()));
-        baseView.ShowError();
+        baseView.showTipMsg(MyApplication.getInstance().getResources().getString(R.string.code_tip, apiException.getCode(), apiException.getMessage()));
     }
 
     @Override

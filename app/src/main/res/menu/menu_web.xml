@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/menu_web_collect"
+        android:title="@string/collect"
+        app:actionLayout="@layout/toolbar_collection"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/menu_web_copy"
+        android:title="@string/copy_url"
+        app:showAsAction="collapseActionView"/>
+
+    <item
+        android:id="@+id/menu_web_open_in_browser"
+        android:title="@string/open_in_browser"
+        app:showAsAction="collapseActionView"/>
+
+</menu>

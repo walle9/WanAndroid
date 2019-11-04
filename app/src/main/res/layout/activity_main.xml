@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activity.MainActivity">
+    tools:context=".ui.activity.MainActivity">
 
     <FrameLayout
         android:id="@+id/fl_tab_container"
@@ -15,7 +15,7 @@
         android:layout_gravity="bottom"
         android:id="@+id/ll_main_bottombar"
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="@dimen/bottombar_main_height"
         android:background="?android:attr/selectableItemBackground"
         android:orientation="horizontal">
     </LinearLayout>
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/bottombar_main_height"
-        android:background="@drawable/actionbar_shadow_up" />
+        android:background="@drawable/ic_actionbar_shadow_up" />
 
 
 </FrameLayout>

@@ -12,7 +12,9 @@ import androidx.annotation.Nullable;
 import com.example.wanandroid.di.component.ActivityComponent;
 import com.example.wanandroid.di.component.DaggerActivityComponent;
 import com.example.wanandroid.di.module.ActivityModule;
-import com.example.wanandroid.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import me.yokeyword.fragmentation_swipeback.SwipeBackFragment;
 
@@ -49,6 +51,7 @@ public abstract class BaseFragment extends SwipeBackFragment implements BaseView
         if (swipeBackEnable()) {
             view = attachToSwipeBack(view);
         }
+
         return view;
 
     }
@@ -65,23 +68,54 @@ public abstract class BaseFragment extends SwipeBackFragment implements BaseView
         isInit = true;
         initView();
         initData();
+        setEventBusEnable(isRegisterEventBus());
     }
 
     /**
-     * 初始化数据
+     * 是否注册eventBus
+     *
+     * @param registerEventBus boolean,是否注册
      */
-    protected abstract void initData();
+    private void setEventBusEnable(boolean registerEventBus) {
+        if (registerEventBus&&!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    /**
+     * 是否注册eventBus,默认不注册
+     *
+     * @return false, 不注册
+     */
+    protected boolean isRegisterEventBus() {
+        return false;
+    }
+
+    @Override
+    public void onDestroy() {
+        rootView = null;
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    /**
+     * 获取布局资源
+     *
+     * @return 布局资源
+     */
+    protected abstract int layoutRes();
 
     /**
      * 初始化控件
      */
     protected abstract void initView();
 
-
-    protected <T extends View> T findViewById(@IdRes int id) {
-        return rootView.findViewById(id);
-    }
-
+    /**
+     * 初始化数据
+     */
+    protected abstract void initData();
 
     /**
      * 设置点击事件.
@@ -91,11 +125,14 @@ public abstract class BaseFragment extends SwipeBackFragment implements BaseView
      */
     public BaseFragment setOnClick(@IdRes int... ids) {
         for (int id : ids) {
-            rootView.findViewById(id).setOnClickListener(this);
+            findViewById(id).setOnClickListener(this);
         }
         return this;
     }
 
+    protected <T extends View> T findViewById(@IdRes int id) {
+        return rootView.findViewById(id);
+    }
 
     /**
      * 设置点击事件.
@@ -110,32 +147,19 @@ public abstract class BaseFragment extends SwipeBackFragment implements BaseView
         return this;
     }
 
-
-    @Override
-    public void onDestroy() {
-        rootView = null;
-        super.onDestroy();
-    }
-
-    /**
-     * 获取布局资源
-     *
-     * @return 布局资源
-     */
-    protected abstract int layoutRes();
-
     @Override
     public void onClick(View v) {
     }
 
     @Override
     public void showTipMsg(String msg) {
-        ToastUtils.showTipMsg(msg);
+       ToastUtils.show(msg);
+
     }
 
     @Override
     public void showTipMsg(int msg) {
-        ToastUtils.showTipMsg(msg);
+        ToastUtils.show(msg);
     }
 
     @Override
@@ -167,7 +191,6 @@ public abstract class BaseFragment extends SwipeBackFragment implements BaseView
         onBackPressedSupport();
     }
 
-
     /**
      * 设置是否可以滑动退出,默认不可以
      *
@@ -176,7 +199,6 @@ public abstract class BaseFragment extends SwipeBackFragment implements BaseView
     private boolean swipeBackEnable() {
         return false;
     }
-
 
     /**
      * 获取Activity 注射器
@@ -188,6 +210,5 @@ public abstract class BaseFragment extends SwipeBackFragment implements BaseView
                 .activityModule(new ActivityModule())
                 .build();
     }
-
 
 }

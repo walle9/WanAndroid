@@ -15,7 +15,7 @@ package com.example.wanandroid.model.http;
 public class HttpNoResult {
 
     private int code;
-    private String msg;
+    private String errorMsg;
 
     public int getCode() {
         return code;
@@ -26,12 +26,12 @@ public class HttpNoResult {
         return this;
     }
 
-    public String getMsg() {
-        return msg;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
-    public HttpNoResult setMsg(String msg) {
-        this.msg = msg;
+    public HttpNoResult setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
         return this;
     }
 
@@ -39,7 +39,7 @@ public class HttpNoResult {
     public String toString() {
         return "HttpNoResult{" +
                 "code=" + code +
-                ", msg='" + msg + '\'' +
+                ", errorMsg='" + errorMsg + '\'' +
                 '}';
     }
 }

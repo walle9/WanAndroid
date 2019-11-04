@@ -49,10 +49,4 @@ public interface BaseView {
      * Finish当前页面
      */
     void myFinish();
-
-
-    /**
-     * 处理请求出错逻辑
-     */
-    void ShowError();
 }

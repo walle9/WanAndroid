@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".base.MyApplication"
@@ -20,28 +21,33 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
-
         <activity
-            android:name=".view.activity.SplashActivity"
+            android:name=".ui.activity.LoginActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".ui.activity.SplashActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/SplashTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
         <activity
-            android:name=".view.activity.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:launchMode="singleTask"
-            android:theme="@style/MainTheme"/>
-        <activity android:name=".view.activity.WeatherActivity"
-            android:launchMode="singleTop"/>
-
+            android:theme="@style/MainTheme" />
+        <activity
+            android:name=".ui.activity.WeatherActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.activity.SimpleWebActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.activity.ArticleActivity"
+            android:launchMode="singleTop" />
 
         <!-- autosize -->
         <meta-data

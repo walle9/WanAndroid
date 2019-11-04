@@ -1,5 +1,8 @@
 package com.example.wanandroid.model.http.api;
 
+import com.example.wanandroid.model.bean.HomeBannerBean;
+import com.example.wanandroid.model.bean.HomeListBean;
+import com.example.wanandroid.model.bean.LoginBean;
 import com.example.wanandroid.model.bean.LookerBean;
 import com.example.wanandroid.model.bean.WeatherBean;
 import com.example.wanandroid.model.http.HttpNoResult;
@@ -9,6 +12,8 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import retrofit2.http.Field;
+import retrofit2.http.Path;
 
 /**
  * @ProjectName: MyMvpDemo
@@ -38,7 +43,44 @@ public interface HttpHelper {
      * @return 天气信息
      */
     Observable<HttpResult<WeatherBean>> weather(String city);
-    Flowable<HttpNoResult> login(String phone, String code);
+    Flowable<HttpNoResult> loginaaa(String phone, String code);
     //Flowable<HttpResult<List<DiyBean>>> diyKeys(String allId);
     Observable<HttpResult<List<LookerBean>>> getGirlList(int count,int page);
+
+    //-------------------------------
+
+    /**
+     * 获取首页文章列表
+     * @param page  页码，拼接在连接中，从0开始
+     * @return  HomeListBean,首页文章列表
+     */
+    Observable<HttpResult<HomeListBean>> homeArticleList(int page);
+
+    /**
+     * 获取首页banber
+     * @return  HomeBannerBean,首页轮播数据
+     */
+    Observable<HttpResult<List<HomeBannerBean>>> homeBanner();
+
+    /**
+     * 登录
+     * @param username  用户名
+     * @param password  密码
+     * @return  LoginBean
+     */
+    Observable<HttpResult<LoginBean>> login(String username, String password);
+
+    /**
+     * 收藏站内文章
+     * @param id 文章id
+     * @return  HttpNoResult
+     */
+    Observable<HttpNoResult> collect(int id);
+
+    /**
+     * 取消收藏
+     * @param id 文章id
+     * @return  HttpNoResult
+     */
+    Observable<HttpNoResult> uncollect(int id);
 }

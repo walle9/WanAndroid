@@ -31,7 +31,7 @@ public class WeatherActivityPresenter extends BaseMvpPresenter<WeatherActivityCo
     @Override
     public void loadData(String city) {
         /*addSubscribe(dataHelper.weather(city)
-                    .compose(MyRxUtils.ToMainWithHandResultOfObservableTransformer(Schedulers.io()))
+                    .compose(MyRxUtils.ToMainHandlerHttpResultObservable(Schedulers.io()))
                     .doOnSubscribe(disposable -> baseView.showLoading())
                     .subscribeWith(new BaseDisposableObserver<WeatherBean>(baseView) {
                         @Override

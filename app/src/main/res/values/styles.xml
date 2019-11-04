@@ -22,15 +22,20 @@
     <style name="LineHorizontal">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
-        <item name="android:background">@color/line</item>
+        <item name="android:background">@color/colorLine</item>
     </style>
 
 
-    <style name="Toolbar">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">?attr/actionBarSize</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
+    <style name="Toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="OverflowMenuStyle" parent="@style/ThemeOverlay.AppCompat.Light">
+        <item name="overlapAnchor">false</item>
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:background">@color/white</item>
+        <!--图标与文字的间距-->
+        <item name="android:drawablePadding">@dimen/optionsmenu_drawablepadding</item>
     </style>
 
 </resources>

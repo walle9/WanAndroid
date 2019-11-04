@@ -1,6 +1,6 @@
 package com.example.wanandroid.base;
 
-import com.example.wanandroid.model.DataHelper;
+import com.example.wanandroid.model.http.api.DataHelper;
 
 import javax.inject.Inject;
 

@@ -3,7 +3,6 @@ package com.example.wanandroid.presenter;
 import com.example.wanandroid.base.BaseMvpPresenter;
 import com.example.wanandroid.contract.ThirdTabFragmentContract;
 import com.example.wanandroid.model.bean.LookerBean;
-import com.example.wanandroid.model.bean.WeatherBean;
 import com.example.wanandroid.model.http.BaseDisposableObserver;
 import com.example.wanandroid.model.http.MyRxUtils;
 
@@ -40,20 +39,23 @@ public class ThirdTabFragmentPresenter extends BaseMvpPresenter<ThirdTabFragment
             page = 1;
         }
 
-        addSubscribe(dataHelper.getGirlList(count,page)
-                    .compose(MyRxUtils.ToMainWithHandResultOfObservableTransformer(Schedulers.io()))
-                    .doOnSubscribe(disposable -> baseView.showLoading())
-                    .subscribeWith(new BaseDisposableObserver<List<LookerBean>>(baseView) {
-                        @Override
-                        public void onNext(List<LookerBean> lookerBeans) {
-                            if (null!=lookerBeans) {
-                                baseView.showSuccessful(lookerBeans,isRefresh);
+        addSubscribe(dataHelper.getGirlList(count, page)
+                .compose(MyRxUtils.ToMainHandlerHttpResultObservable(Schedulers.io()))
+                .doOnSubscribe(disposable -> baseView.showLoading())
+                .subscribeWith(new BaseDisposableObserver<List<LookerBean>>(baseView) {
+                    @Override
+                    public void onNext(List<LookerBean> lookerBeans) {
+
+                        if (null != baseView) {
+                            if (null != lookerBeans) {
+                                baseView.showSuccessful(lookerBeans, isRefresh);
                                 page++;
                             } else {
                                 baseView.showHasNoData(isRefresh);
                             }
                         }
-                    })
+                    }
+                })
         );
 
     }

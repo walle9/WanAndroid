@@ -47,7 +47,6 @@ public abstract class MySubscriber<T> extends ResourceSubscriber<T> {
         baseView.hideLoading();
         ApiException apiException = FactoryException.analysisExcetpion(t);
         baseView.showTipMsg(MyApplication.getInstance().getResources().getString(R.string.code_tip,apiException.getCode(),apiException.getMessage()));
-        baseView.ShowError();
     }
 
     @Override

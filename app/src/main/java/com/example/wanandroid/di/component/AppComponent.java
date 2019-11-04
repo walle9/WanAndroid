@@ -3,7 +3,7 @@ package com.example.wanandroid.di.component;
 import com.example.wanandroid.di.module.AppModule;
 import com.example.wanandroid.di.module.HttpModule;
 import com.example.wanandroid.manager.AppManager;
-import com.example.wanandroid.model.DataHelper;
+import com.example.wanandroid.model.http.api.DataHelper;
 
 import javax.inject.Singleton;
 

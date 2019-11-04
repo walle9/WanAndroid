@@ -13,24 +13,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
-
-import androidx.annotation.IdRes;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.wanandroid.R;
 import com.example.wanandroid.di.component.ActivityComponent;
 import com.example.wanandroid.di.component.DaggerActivityComponent;
 import com.example.wanandroid.di.module.ActivityModule;
-import com.example.wanandroid.utils.ToastUtils;
+import com.hjq.toast.ToastUtils;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.Objects;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
-import me.yokeyword.fragmentation.anim.DefaultVerticalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
 
@@ -49,12 +48,7 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
 public abstract class BaseActivity extends SwipeBackActivity implements BaseView, View.OnClickListener {
 
     private AlertDialog loadingDialog;
-    private Toolbar toolbar;
-    private TextView tvToolbarTitle;
-    private TextView tvToolbarRight;
-    private TextView tvBack;
-    private View lineHorizontal;
-
+    protected Toolbar toolbar;
 
 
     @Override
@@ -64,16 +58,15 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
         setSwipeBackEnable(swipeEnable());
         //设置是否强制竖屏,默认强制
         setRequestedOrientation(orientationPortraitEnable());
+        //设置是否注册eventBus,默认不注册
+        setEventBusEnable(isRegisterEventBus());
 
         //设置布局
         initLayout(savedInstanceState);
-
-        //初始化默认及用户添加的控件
-        initDefaultView();
-
-        //设置点击事件
-        setOnClick(R.id.tv_back_base_activity);
-
+        //初始化toolbar和toolbar和具体布局的分割线
+        initToolbarAndSplitLine();
+        //初始化用户的控件
+        initView();
         //初始化数据
         initData();
 
@@ -81,24 +74,17 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
 
     }
 
+
     @Override
     protected void onDestroy() {
-        MyApplication.getAppComponent().getAppManager().finishActivity(this);
         super.onDestroy();
+        MyApplication.getAppComponent().getAppManager().finishActivity(this);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     //--------------------------------------子类必须实现的方法----------------------------------
-
-    /**
-     * 加载数据的方法,交由子类实现
-     */
-    protected abstract void initData();
-
-    /**
-     * 初始化布局,交由子类实现
-     */
-    protected abstract void initView();
-
 
     /**
      * 获取当前布局对象,交由子类实现
@@ -109,8 +95,28 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
      */
     protected abstract int getLayoutId(Bundle savedInstanceState);
 
+    /**
+     * 初始化布局,交由子类实现
+     */
+    protected abstract void initView();
+
+    /**
+     * 加载数据的方法,交由子类实现
+     */
+    protected abstract void initData();
+
 
     //--------------------------------------子类可以选择覆盖的方法----------------------------------
+
+
+    /**
+     * 是否注册eventBus,默认不注册
+     *
+     * @return false, 不注册
+     */
+    protected boolean isRegisterEventBus() {
+        return false;
+    }
 
 
     /**
@@ -134,24 +140,29 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
     }
 
 
-    @Override
-    public void onBackPressedSupport() {
-        super.onBackPressedSupport();
+    /**
+     * 设置是否显示toolbar,默认不显示,显示时,可以使用默认的控件,或添加直接想要的控件
+     *
+     * @return false, 不显示
+     */
+    public boolean isShowToolbar() {
+        return false;
     }
 
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId() == R.id.tv_back_base_activity) {
-            onBackPressedSupport();
-        }
+    /**
+     * 是否显示toolbar和内容之间的分割线,默认不显示
+     *
+     * @return false, 不显示
+     */
+    public boolean isShowLineHorizontal() {
+        return false;
     }
 
 
     /**
      * 设置Fragment的转场动画,子类可重写此方法改变转场动画
      *
-     * @return
+     * @return 具体动画
      */
     @Override
     public FragmentAnimator onCreateFragmentAnimator() {
@@ -162,7 +173,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
     /**
      * 获取Activity 注射器
      *
-     * @return
+     * @return  ActivityComponent
      */
     protected ActivityComponent getActivityComponent() {
         return DaggerActivityComponent.builder()
@@ -173,169 +184,6 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
 
 
     //-------------------------------------子类可以调用的方法-----------------------------------------------
-
-    /**
-     * 初始化toolbar的内容,子类使用该方法修改toolbar
-     *
-     * @param isShowToolbar        是否显示toolbar
-     * @param isShowBack           是否显示左边的TextView
-     * @param isShowMore           是否显示右边的TextView
-     * @param isShowLineHorizontal 是否显示显示水平线
-     * @return 当前activity对象，可以连点
-     */
-    protected BaseActivity initToolbar(boolean isShowToolbar, boolean isShowBack,
-                                       boolean isShowMore, boolean isShowLineHorizontal) {
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (null != actionBar) {
-            if (isShowToolbar) {
-                actionBar.show();
-                tvBack = findViewById(R.id.tv_back_base_activity);
-                TextView textView = findViewById(R.id.tv_right_base_activity);
-                if (null != tvBack && null != textView) {
-                    tvBack.setVisibility(isShowBack ? View.VISIBLE : View.INVISIBLE);
-                    textView.setVisibility(isShowMore ? View.VISIBLE : View.INVISIBLE);
-                }
-            } else {
-                actionBar.hide();
-                toolbar.setVisibility(View.GONE);
-
-            }
-        }
-        if (!isShowLineHorizontal) {
-            lineHorizontal.setVisibility(View.GONE);
-        }
-
-
-
-        return this;
-    }
-
-
-    /**
-     * 设置标题
-     *
-     * @param title
-     * @return
-     */
-    @SuppressWarnings("unused")
-    public BaseActivity setMyTitle(String title) {
-        tvToolbarTitle.setText(title);
-        return this;
-    }
-
-
-    /**
-     * 设置标题
-     *
-     * @param stringId
-     * @return
-     */
-    public BaseActivity setMyTitle(@StringRes int stringId) {
-        tvToolbarTitle.setText(stringId);
-        return this;
-    }
-
-
-    /**
-     * 设置标题
-     *
-     * @param title
-     * @return
-     */
-    public BaseActivity setTitles(CharSequence title) {
-        tvToolbarTitle.setText(title);
-        return this;
-    }
-
-
-    /**
-     * 设置Toolbar背景颜色
-     *
-     * @param colorId
-     * @return
-     */
-    public BaseActivity setToolbarBack(int colorId) {
-        toolbar.setBackgroundColor(getResources().getColor(colorId));
-        return this;
-    }
-
-
-    /**
-     * 设置左边内容.同时清空左边背景
-     *
-     * @param leftTitle 内容
-     * @return {@link BaseActivity}
-     */
-    public BaseActivity setLeftTitle(String leftTitle) {
-        if (tvBack != null) {
-            tvBack.setBackground(null);
-            tvBack.setText(leftTitle);
-        }
-        return this;
-    }
-
-
-    /**
-     * 设置左边内容.同时清空左边背景
-     *
-     * @param leftTitle 内容
-     */
-    public void setLeftTitle(@StringRes int leftTitle) {
-        if (tvBack != null) {
-            tvBack.setBackground(null);
-            tvBack.setText(leftTitle);
-        }
-    }
-
-
-    /**
-     * 设置左边的背景
-     *
-     * @param resId
-     * @return
-     */
-    @SuppressWarnings("unused")
-    protected BaseActivity setLeftBackground(int resId) {
-        tvBack.setBackgroundResource(resId);
-        return this;
-    }
-
-
-    /**
-     * 设置标题右边更多的内容
-     *
-     * @param moreTitle
-     */
-    public void setMoreTitle(String moreTitle) {
-        tvToolbarRight.setText(moreTitle);
-    }
-
-
-    /**
-     * 设置标题右边更多的内容
-     *
-     * @param stringId
-     * @return
-     */
-    public BaseActivity setMoreTitle(@StringRes int stringId) {
-        tvToolbarRight.setText(stringId);
-        return this;
-    }
-
-
-    /**
-     * 设置右边更多的背景,默认没有
-     *
-     * @param resId
-     * @return
-     */
-    @SuppressWarnings("unused")
-    protected BaseActivity setMoreBackground(int resId) {
-        tvToolbarRight.setBackgroundResource(resId);
-        return this;
-    }
-
 
     /**
      * 设置状态栏背景颜色，不能改变状态栏内容的颜色
@@ -360,7 +208,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
      * @param ids 被点击View的ID
      * @return {@link BaseActivity}
      */
-    public BaseActivity setOnClick(@IdRes int... ids) {
+    protected BaseActivity setOnClick(@IdRes int... ids) {
         View view;
         for (int id : ids) {
             view = findViewById(id);
@@ -378,7 +226,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
      * @param views 被点击View
      * @return {@link BaseActivity}
      */
-    public BaseActivity setOnClick(View... views) {
+    protected BaseActivity setOnClick(View... views) {
         for (View view : views) {
             view.setOnClickListener(this);
         }
@@ -393,7 +241,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
      */
     @Override
     public void showTipMsg(String msg) {
-        ToastUtils.showTipMsg(msg);
+        ToastUtils.show(msg);
     }
 
     /**
@@ -403,18 +251,14 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
      */
     @Override
     public void showTipMsg(int msg) {
-        ToastUtils.showTipMsg(msg);
+        ToastUtils.show(msg);
     }
-
-
-    //------------------------------------子类可以被调用的方法------------------------------------
-
-    private DialogInterface.OnKeyListener onKeyListener =
-            (dialog, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0;
 
     /**
      * 网络请求的时候显示正在加载的对话框
      */
+    private DialogInterface.OnKeyListener onKeyListener =
+            (dialog, keyCode, event) -> keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0;
     @Override
     public void showLoading() {
         if (null == loadingDialog) {
@@ -432,6 +276,8 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
             loadingDialog.show();
         }
     }
+
+
 
     /**
      * 网络请求完成时隐藏加载对话框
@@ -467,6 +313,22 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
 
     //-------------------------------------默认已使用的方法-----------------------------------
 
+
+
+
+
+    /**
+     * 是否注册eventBus
+     *
+     * @param registerEventBus boolean,是否注册
+     */
+    private void setEventBusEnable(boolean registerEventBus) {
+        if (registerEventBus&&!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+
     /**
      * 初始化布局
      *
@@ -477,7 +339,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
 
         //添加自己的布局
         int layoutId = getLayoutId(savedInstanceState);
-        if (0!=layoutId) {
+        if (0 != layoutId) {
             LinearLayout rootLinearLayout = findViewById(R.id.ll_layout_base_activity);
             getLayoutInflater().inflate(layoutId, rootLinearLayout, true);
         }
@@ -486,15 +348,26 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
 
 
     /**
-     * 初始化控件的方法
+     * 初始化toolbar和toolbar与用户布局之间的分割线
      */
-    protected void initDefaultView() {
+    private void initToolbarAndSplitLine() {
         toolbar = findViewById(R.id.toolbar_base_activity);
-        tvToolbarTitle = findViewById(R.id.tv_title_base_activity);
-        tvToolbarRight = findViewById(R.id.tv_right_base_activity);
-        lineHorizontal = findViewById(R.id.view_base_activity);
-        //初始化控件
-        initView();
+        //这里不设置的话,后面再设置不会显示后面的内容
+        toolbar.setTitle("");
+        View lineHorizontal = findViewById(R.id.view_base_activity);
+
+        if (isShowToolbar()) {
+            setSupportActionBar(toolbar);
+            //添加默认的返回图标
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+            //getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用(14以后可以不用设置)
+        } else {
+            toolbar.setVisibility(View.GONE);
+        }
+
+        if (!isShowLineHorizontal()) {
+            lineHorizontal.setVisibility(View.GONE);
+        }
     }
 
 
@@ -503,7 +376,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
      *
      * @param portrait true,强制竖屏
      */
-    protected void setRequestedOrientation(boolean portrait) {
+    private void setRequestedOrientation(boolean portrait) {
         if (portrait) {
             //强制竖屏
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);

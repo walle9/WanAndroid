@@ -14,7 +14,7 @@ package com.example.wanandroid.model.http;
  */
 public interface ErrorInfo {
 
-    public static final String SUCCESS = "0";
+    public static final int SUCCESS = 0;
 
     public static final int HTTP_ERROR = -1;
     public static final String HTTP_ERROR_MSG = "请求错误";
@@ -31,7 +31,16 @@ public interface ErrorInfo {
     public static final int JSON_ERROR = -5;
     public static final String JSON_ERROR_MSG = "json解析错误";
 
-    public static final int UNKNOWN_ERROR = -999;
+    public static final int NET_ERROR = -6;
+    public static final String NET_ERROR_MSG = "网络连接失败,请检查网络设置";
+
+    public static final int SSL_ERROR = -7;
+    public static final String SSL_ERROR_MSG = "证书验证失败";
+
+    public static final int LOGON_INVALIDATION_ERROR = -1001;
+    public static final String LOGON_INVALIDATION_ERROR_MSG = "登录失效";
+
+
     public static final String UNKNOWN_ERROR_MSG = "未知错误";
 
     /**

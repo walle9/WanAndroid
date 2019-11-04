@@ -1,5 +1,8 @@
 package com.example.wanandroid.model.http.api;
 
+import com.example.wanandroid.model.bean.HomeBannerBean;
+import com.example.wanandroid.model.bean.HomeListBean;
+import com.example.wanandroid.model.bean.LoginBean;
 import com.example.wanandroid.model.bean.LookerBean;
 import com.example.wanandroid.model.bean.WeatherBean;
 import com.example.wanandroid.model.http.HttpNoResult;
@@ -56,7 +59,7 @@ public interface HttpApi {
      */
     @FormUrlEncoded
     @POST("")
-    Flowable<HttpNoResult> login(@Field("phone") String phone, @Field("code") String code);
+    Flowable<HttpNoResult> loginaaa(@Field("phone") String phone, @Field("code") String code);
 
 
     /**
@@ -65,4 +68,48 @@ public interface HttpApi {
      */
     @GET(ProtocolHttp.GETGIRLLIST)
     Observable<HttpResult<List<LookerBean>>> getGirlList(@Path("num") int num, @Path("page") int page);
+
+    //----------------------------------------------------------------------
+
+    /**
+     * 首页文章列表
+     *
+     * @param page  页码，拼接在连接中，从0开始
+     * @return  HomeListBean
+     */
+    @GET(ProtocolHttp.HOMEARTICLELIST)
+    Observable<HttpResult<HomeListBean>> homeArticleList(@Path("page") int page);
+
+    /**
+     * 首页banber
+     *
+     * @return  HomeBannerBean
+     */
+    @GET(ProtocolHttp.HOMEBANNER)
+    Observable<HttpResult<List<HomeBannerBean>>> homeBanner();
+
+    /**
+     * 登录
+     * @return  LoginBean
+     */
+    @FormUrlEncoded
+    @POST(ProtocolHttp.LOGIN)
+    Observable<HttpResult<LoginBean>> login(@Field("username") String username, @Field("password") String password);
+
+
+    /**
+     * 收藏站内文章
+     * @param id    文章id
+     * @return  HttpNoResult
+     */
+    @POST(ProtocolHttp.COLLECT)
+    Observable<HttpNoResult> collect(@Path("id") int id);
+
+    /**
+     * 取消收藏
+     * @param id    文章id
+     * @return  HttpNoResult
+     */
+    @POST(ProtocolHttp.UNCOLLECT)
+    Observable<HttpNoResult> uncollect(@Path("id") int id);
 }

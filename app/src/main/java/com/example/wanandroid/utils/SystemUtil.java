@@ -15,10 +15,12 @@ import android.view.View;
 
 import androidx.core.content.FileProvider;
 
+import com.example.wanandroid.R;
 import com.example.wanandroid.base.MyApplication;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 /**
  * @ProjectName: MyMvpDemo
@@ -135,16 +137,17 @@ public class SystemUtil {
         return false;
     }
 
+
     /**
-     * 保存文字到剪贴板
-     * @param context
-     * @param text
+     * 复制字符串
+     *
+     * @param context   上下文
+     * @param text  字符串
      */
     public static void copyToClipBoard(Context context, String text) {
-        ClipData clipData = ClipData.newPlainText("url", text);
-        ClipboardManager manager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        manager.setPrimaryClip(clipData);
-        ToastUtils.showTipMsg("已复制到剪贴板");
+        ClipboardManager mClipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        Objects.requireNonNull(mClipboardManager).setPrimaryClip(ClipData.newPlainText(null, text));
+        UIUtils.showToast(context.getResources().getString(R.string.copied));
     }
 
 

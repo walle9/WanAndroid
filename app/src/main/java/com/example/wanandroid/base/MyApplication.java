@@ -2,8 +2,10 @@ package com.example.wanandroid.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.text.Layout;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
@@ -13,6 +15,9 @@ import com.example.wanandroid.di.component.AppComponent;
 import com.example.wanandroid.di.component.DaggerAppComponent;
 import com.example.wanandroid.di.module.AppModule;
 import com.example.wanandroid.di.module.HttpModule;
+import com.example.wanandroid.utils.MyToastStyle;
+import com.hjq.toast.ToastUtils;
+import com.hjq.toast.style.ToastAliPayStyle;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -59,11 +64,15 @@ public class MyApplication extends Application {
         init();
         //初始化屏幕宽高
         getScreenSize();
+
+
     }
 
     private void init() {
         initLogger();
         initAppComponent();
+        ToastUtils.init(this);
+        ToastUtils.initStyle(new MyToastStyle(this));
     }
 
 

@@ -2,9 +2,9 @@ package com.example.wanandroid.di.module;
 
 import com.example.wanandroid.base.MyApplication;
 import com.example.wanandroid.manager.AppManager;
-import com.example.wanandroid.model.DataHelper;
+import com.example.wanandroid.model.http.api.DataHelper;
 import com.example.wanandroid.model.http.api.HttpHelper;
-import com.example.wanandroid.model.http.RetrofitHelper;
+import com.example.wanandroid.model.http.api.RetrofitHelper;
 
 import javax.inject.Singleton;
 

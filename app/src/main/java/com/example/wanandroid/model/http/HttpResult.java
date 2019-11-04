@@ -15,27 +15,17 @@ import com.google.gson.annotations.SerializedName;
  * @Version: 1.0
  */
 public class HttpResult<T> {
-    private String errorCode;
+    private int errorCode;
     private String errorMsg;
-
-    private boolean error;
-    public boolean isError() {
-        return error;
-    }
-
-    public void setError(boolean error) {
-        this.error = error;
-    }
-
 
     @SerializedName(value = "data",alternate = {"result","results"})
     public T data;
 
-    public String getCode() {
+    public int getCode() {
         return errorCode;
     }
 
-    public HttpResult setCode(String code) {
+    public HttpResult setCode(int code) {
         errorCode = code;
         return this;
     }

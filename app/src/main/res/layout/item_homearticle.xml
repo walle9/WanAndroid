@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin"
+    android:background="?attr/selectableItemBackground">
+
+    <!--top-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_item_home_article_tag_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tv_item_home_article_tag_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/item_home_article_new"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="@dimen/text_body" />
+
+                <View
+                    android:layout_width="2dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"
+                    android:background="@drawable/shape_item_article_point" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_item_home_article_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextTitle"
+                android:textSize="@dimen/text_body"
+                tools:text="我是作者" />
+
+            <TextView
+                android:id="@+id/tv_item_home_article_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@drawable/shape_item_article_tag_bg"
+                android:includeFontPadding="false"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/text_body"
+                android:visibility="gone"
+                tools:text="项目"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_item_home_article_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextTitle"
+            android:textSize="@dimen/text_body"
+            tools:text="21小时前" />
+
+    </LinearLayout>
+
+    <!--middle-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_item_home_article_icon"
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="@dimen/item_drawable_padding"
+            android:visibility="gone"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="0dp"
+            tools:visibility="visible">
+
+            <ImageView
+                android:id="@+id/iv_item_home_article_icon"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/colorItemViewBg"
+                android:contentDescription="@string/item_home_article_img"
+                android:scaleType="centerCrop"
+                android:src="@drawable/image_holder" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_item_home_article_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:lineSpacingExtra="0dp"
+                android:maxLines="3"
+                android:textColor="@color/colorTextBody"
+                android:textSize="@dimen/text_sub_title"
+                tools:text="公众号文章列表强势上线公众号文章列表强势公众号文章列表强势上线" />
+
+            <TextView
+                android:id="@+id/tv_item_home_article_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ellipsize="end"
+                android:includeFontPadding="true"
+                android:lineSpacingExtra="0dp"
+                android:maxLines="1"
+                android:textColor="@color/colorTextSub"
+                android:textSize="@dimen/text_body"
+                tools:text="公众号文章列表强势上线公众号文章列表强势上线公众号文章列表强势上线" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!--bottom-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_item_home_article_chaptername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextSub"
+            android:textSize="@dimen/text_body"
+            tools:text="动画效果" />
+
+        <View
+            android:layout_width="2dp"
+            android:layout_height="2dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginRight="3dp"
+            android:background="@drawable/shape_item_article_point" />
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/tv_item_home_article_superchaptername"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextSub"
+            android:textSize="@dimen/text_body"
+            tools:text="Lottie" />
+
+        <com.sackcentury.shinebuttonlib.ShineButton
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@android:color/darker_gray"
+            android:id="@+id/shine_button"
+            app:btn_color="@color/colorItemViewBg"
+            app:btn_fill_color="@color/colorAccent"
+            app:allow_random_color="false"
+            app:siShape="@raw/heart"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#03A9F4</color>
-    <color name="colorPrimaryDark">#2196F3</color>
-    <color name="colorAccent">#00BCD4</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF80AB</color>
 
-    <color name="colorBackground">#EEEEEE</color>
+    <color name="activityBackgroundGrey">#9E9E9E</color>
+    <color name="colorItemViewBg">#BDBDBD</color>
+
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="line">#D8D8D8</color>
-    <color name="tab_unselect">#c9c9c9</color>
+    <color name="grey">#9E9E9E</color>
 
-    <color name="colorTextTitle">#333333</color>
-    <color name="colorTextContent">#444444</color>
-    <color name="colorTextAssistant">#888888</color>
+    <!--底部导航水波纹-->
+    <color name="colorRippleBottombar">#E0E0E0</color>
+    <color name="colorLine">#E0E0E0</color>
+
+    <!--文字颜色-->
+    <color name="colorTextBottombar">#9E9E9E</color>
+    <color name="colorTextTitle">#000000</color>
+    <color name="colorTextSub">#212121</color>
+    <color name="colorTextBody">#616161</color>
+
 
 </resources>

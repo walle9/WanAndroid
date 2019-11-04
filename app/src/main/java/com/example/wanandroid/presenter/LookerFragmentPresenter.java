@@ -1,20 +1,9 @@
 package com.example.wanandroid.presenter;
 
-import com.example.wanandroid.base.BaseMvpFragment;
 import com.example.wanandroid.base.BaseMvpPresenter;
 import com.example.wanandroid.contract.LookerFragmentContract;
-import com.example.wanandroid.model.bean.LookerBean;
-import com.example.wanandroid.model.http.BaseDisposableObserver;
-import com.example.wanandroid.model.http.HttpNoResult;
-import com.example.wanandroid.model.http.MyRxUtils;
-import com.example.wanandroid.model.http.MySubscriber;
-import com.example.wanandroid.utils.ToastUtils;
-
-import java.util.List;
 
 import javax.inject.Inject;
-
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @ProjectName: MyMvpDemo
@@ -43,7 +32,7 @@ public class LookerFragmentPresenter extends BaseMvpPresenter<LookerFragmentCont
         }
 
         /*addSubscribe(dataHelper.LookerImgs()
-                    .compose(MyRxUtils.ToMainWithHandResultOfObservableTransformer(Schedulers.io()))
+                    .compose(MyRxUtils.ToMainHandlerHttpResultObservable(Schedulers.io()))
                     .subscribeWith(new BaseDisposableObserver<List<LookerBean>>(baseView) {
                         @Override
                         public void onNext(List<LookerBean> lookerBeans) {
