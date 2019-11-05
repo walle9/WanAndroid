@@ -72,6 +72,11 @@ public class RetrofitHelper implements HttpHelper {
     }
 
     @Override
+    public Observable<HttpResult<List<HomeListBean.DatasBean>>> homeArticleTopList() {
+        return httpApi.homeArticleTopList();
+    }
+
+    @Override
     public Observable<HttpResult<List<HomeBannerBean>>> homeBanner() {
         return httpApi.homeBanner();
     }

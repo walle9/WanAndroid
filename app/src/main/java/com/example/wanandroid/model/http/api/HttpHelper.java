@@ -57,6 +57,12 @@ public interface HttpHelper {
     Observable<HttpResult<HomeListBean>> homeArticleList(int page);
 
     /**
+     * 获取首页top库列表
+     * @return  HomeListBean
+     */
+    Observable<HttpResult<List<HomeListBean.DatasBean>>> homeArticleTopList();
+
+    /**
      * 获取首页banber
      * @return  HomeBannerBean,首页轮播数据
      */

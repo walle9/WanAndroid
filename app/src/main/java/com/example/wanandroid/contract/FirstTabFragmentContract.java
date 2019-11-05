@@ -52,24 +52,16 @@ public interface FirstTabFragmentContract {
         void showgetHomeBannerFailed();
 
         /**
-         * 收藏站内文章成功
+         * 加载首页top库数据成功
+         * @param datasBeans top库数据
          */
-        void showCollectSuccessful(String msg);
+        void showgetHomeArticleTopListSuccessful(List<HomeListBean.DatasBean> datasBeans);
 
         /**
-         * 收藏站内文章失败
+         * 加载首页Top列表数据失败,处理界面
          */
-        void showCollectFailed(ShineButton shineButton);
+        void showgetHomeArticleTopListFailed();
 
-        /**
-         * 取消收藏成功
-         */
-        void showUncollectSuccessful(String msg);
-
-        /**
-         * 取消收藏失败
-         */
-        void showUncollectFailed(ShineButton shineButton);
     }
 
 
@@ -83,6 +75,11 @@ public interface FirstTabFragmentContract {
          * @param page  页码
          */
         void loadHomeArticleList(int page);
+
+        /**
+         * 加载首页Top数据
+         */
+        void loadHomeArticleTopList();
 
         /**
          * 加载首页banner

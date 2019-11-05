@@ -81,6 +81,13 @@ public interface HttpApi {
     Observable<HttpResult<HomeListBean>> homeArticleList(@Path("page") int page);
 
     /**
+     * 首页Top库文章
+     * @return  HomeListBean
+     */
+    @GET(ProtocolHttp.HOMEARTICLETOPLIST)
+    Observable<HttpResult<List<HomeListBean.DatasBean>>> homeArticleTopList();
+
+    /**
      * 首页banber
      *
      * @return  HomeBannerBean

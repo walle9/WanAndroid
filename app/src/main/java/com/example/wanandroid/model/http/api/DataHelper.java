@@ -60,6 +60,11 @@ public class DataHelper implements HttpHelper {
     }
 
     @Override
+    public Observable<HttpResult<List<HomeListBean.DatasBean>>> homeArticleTopList() {
+        return http.homeArticleTopList();
+    }
+
+    @Override
     public Observable<HttpResult<List<HomeBannerBean>>> homeBanner() {
         return http.homeBanner();
     }

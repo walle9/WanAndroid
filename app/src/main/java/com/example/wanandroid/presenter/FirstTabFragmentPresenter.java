@@ -4,9 +4,12 @@ import com.example.wanandroid.base.BaseMvpPresenter;
 import com.example.wanandroid.contract.FirstTabFragmentContract;
 import com.example.wanandroid.model.bean.HomeBannerBean;
 import com.example.wanandroid.model.bean.HomeListBean;
+import com.example.wanandroid.model.event.CollectionEvent;
 import com.example.wanandroid.model.http.BaseDisposableObserver;
 import com.example.wanandroid.model.http.MyRxUtils;
 import com.sackcentury.shinebuttonlib.ShineButton;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -56,6 +59,26 @@ public class FirstTabFragmentPresenter extends BaseMvpPresenter<FirstTabFragment
     }
 
     @Override
+    public void loadHomeArticleTopList() {
+        addSubscribe(dataHelper.homeArticleTopList()
+                .compose(MyRxUtils.ToMainHandlerHttpResultObservable(Schedulers.io()))
+                .subscribeWith(new BaseDisposableObserver<List<HomeListBean.DatasBean>>(baseView) {
+
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        baseView.showgetHomeArticleTopListFailed();
+                    }
+
+                    @Override
+                    public void onNext(List<HomeListBean.DatasBean> datasBeans) {
+                        baseView.showgetHomeArticleTopListSuccessful(datasBeans);
+                    }
+                })
+        );
+    }
+
+    @Override
     public void loadBanner() {
         addSubscribe(dataHelper.homeBanner()
                 .compose(MyRxUtils.ToMainHandlerHttpResultObservable(Schedulers.io()))
@@ -79,18 +102,18 @@ public class FirstTabFragmentPresenter extends BaseMvpPresenter<FirstTabFragment
     @Override
     public void collect(int id, ShineButton shineButton) {
         addSubscribe(dataHelper.collect(id)
-        .compose(MyRxUtils.ToMainHandlerHttpNoResultObservable(Schedulers.io()))
+                .compose(MyRxUtils.ToMainHandlerHttpNoResultObservable(Schedulers.io()))
                 .subscribeWith(new BaseDisposableObserver<String>(baseView) {
                     @Override
                     public void onError(Throwable e) {
                         super.onError(e);
-                        baseView.showCollectFailed(shineButton);
+                        EventBus.getDefault().post(new CollectionEvent(false,id));
                     }
 
                     @Override
                     public void onNext(String s) {
-                        if (null!=baseView) {
-                            baseView.showCollectSuccessful(s);
+                        if (null != baseView) {
+                            EventBus.getDefault().post(new CollectionEvent(true,id));
                         }
                     }
                 })
@@ -99,23 +122,21 @@ public class FirstTabFragmentPresenter extends BaseMvpPresenter<FirstTabFragment
 
     @Override
     public void uncollect(int id, ShineButton shineButton) {
-            addSubscribe(dataHelper.uncollect(id)
-                        .compose(MyRxUtils.ToMainHandlerHttpNoResultObservable(Schedulers.io()))
-                        .subscribeWith(new BaseDisposableObserver<String>(baseView) {
-                            @Override
-                            public void onError(Throwable e) {
-                                super.onError(e);
-                                baseView.showUncollectFailed(shineButton);
-                            }
+        addSubscribe(dataHelper.uncollect(id)
+                .compose(MyRxUtils.ToMainHandlerHttpNoResultObservable(Schedulers.io()))
+                .subscribeWith(new BaseDisposableObserver<String>(baseView) {
+                    @Override
+                    public void onError(Throwable e) {
+                        super.onError(e);
+                        EventBus.getDefault().post(new CollectionEvent(true,id));
+                    }
 
-                            @Override
-                            public void onNext(String s) {
-                                if (null!=baseView) {
-                                    baseView.showUncollectSuccessful(s);
-                                }
-                            }
-                        })
-            );
+                    @Override
+                    public void onNext(String s) {
+                        EventBus.getDefault().post(new CollectionEvent(false,id));
+                    }
+                })
+        );
     }
 
 }
