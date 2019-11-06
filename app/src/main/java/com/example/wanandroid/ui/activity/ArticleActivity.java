@@ -51,10 +51,11 @@ public class ArticleActivity extends BaseMvpWebActivity<ArticleActivityPresenter
     private int mArticleId;
     private ShineButton mShineButton;
 
-    public static void actionStartActivity(ContextThemeWrapper context, int articleId, boolean isCollect,String title, String url) {
+    public static void actionStartActivity(ContextThemeWrapper context, boolean isBanner,boolean isCollect,int articleId, String title, String url) {
         Intent intent = new Intent(context, ArticleActivity.class);
-        intent.putExtra("articleId", articleId);
+        intent.putExtra("isBanner", isBanner);
         intent.putExtra("isCollect", isCollect);
+        intent.putExtra("articleId", articleId);
         intent.putExtra("url", url);
         intent.putExtra("title", title);
         context.startActivity(intent);
@@ -130,14 +131,17 @@ public class ArticleActivity extends BaseMvpWebActivity<ArticleActivityPresenter
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        boolean isBanner = getIntent().getBooleanExtra("isBanner", false);
         getMenuInflater().inflate(R.menu.menu_web, menu);
-        MenuItem item = menu.findItem(R.id.menu_web_collect);
-        View actionView = item.getActionView();
-        mShineButton = actionView.findViewById(R.id.shine_button);
-        mShineButton.init(this);
-        boolean isCollect = getIntent().getBooleanExtra("isCollect", false);
-        mShineButton.setChecked(isCollect);
-        mShineButton.setOnClickListener(view -> onOptionsItemSelected(item));
+        if (!isBanner) {
+            MenuItem item = menu.findItem(R.id.menu_web_collect);
+            View actionView = item.getActionView();
+            mShineButton = actionView.findViewById(R.id.shine_button);
+            mShineButton.init(this);
+            boolean isCollect = getIntent().getBooleanExtra("isCollect", false);
+            mShineButton.setChecked(isCollect);
+            mShineButton.setOnClickListener(view -> onOptionsItemSelected(item));
+        }
         return true;
     }
 

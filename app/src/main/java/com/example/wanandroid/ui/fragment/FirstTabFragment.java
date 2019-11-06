@@ -2,6 +2,7 @@ package com.example.wanandroid.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.TokenWatcher;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -65,6 +65,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
     private static final int PAGE_START = 0;
     private int currPage;
     private Banner mBanner;
+    private List<HomeBannerBean> mHomeBannerBeans = new ArrayList<>();
     private ArrayList<String> mImages = new ArrayList<>();
     private List<HomeListBean.DatasBean> mHeaderTopItemBeans = new ArrayList<>();
     private List<View> mHeaderTopItemViews = new ArrayList<>();
@@ -112,7 +113,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
             HomeListBean.DatasBean adapterItem = (HomeListBean.DatasBean) adapter.getItem(position);
             if (null != adapterItem && !TextUtils.isEmpty(adapterItem.mTitle) && !TextUtils.isEmpty(adapterItem.mLink) && adapterItem.mId != -1) {
-                ArticleActivity.actionStartActivity(_mActivity, adapterItem.mId, adapterItem.mCollect, adapterItem.mTitle, adapterItem.mLink);
+                ArticleActivity.actionStartActivity(_mActivity, false, adapterItem.mCollect, adapterItem.mId, adapterItem.mTitle, adapterItem.mLink);
             } else {
                 showTipMsg(_mActivity.getResources().getString(R.string.get_home_articlelist_failed));
             }
@@ -213,6 +214,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
 
         if (!homeBannerBeans.isEmpty()) {
             mImages.clear();
+            mHomeBannerBeans = homeBannerBeans;
             for (HomeBannerBean homeBannerBean : homeBannerBeans) {
                 mImages.add(homeBannerBean.mImagePath);
             }
@@ -233,10 +235,14 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
                 Glide.with(FirstTabFragment.this).load(path).into(imageView);
             }
         });
-        mBanner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-                // TODO: 2019/10/18  跳转到具体的页面
+        mBanner.setOnBannerListener(position -> {
+            if (!mHomeBannerBeans.isEmpty()) {
+                HomeBannerBean homeBannerBean = mHomeBannerBeans.get(position);
+                if (!TextUtils.isEmpty(homeBannerBean.mTitle) && !TextUtils.isEmpty(homeBannerBean.mUrl) && homeBannerBean.mId != -1) {
+                    ArticleActivity.actionStartActivity(_mActivity, true, false, homeBannerBean.mId, homeBannerBean.mTitle, homeBannerBean.mUrl);
+                } else {
+                    showTipMsg(_mActivity.getResources().getString(R.string.get_home_articlelist_failed));
+                }
             }
         });
         mBanner.setImages(mImages);
@@ -245,7 +251,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
 
     @Override
     public void showgetHomeBannerFailed() {
-        // TODO: 2019/10/19 加载banner失败
+
     }
 
     @Override
@@ -296,7 +302,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
 
         viewItemHomeArticleDivider.setVisibility(View.VISIBLE);
         llItemHomeArticleTagNew.setVisibility(View.VISIBLE);
-        tvItemHomeArticleTagNew.setText("置顶");
+        tvItemHomeArticleTagNew.setText(getString(R.string.article_top));
 
         String author = getResources().getString(R.string.unknown);
         if (!TextUtils.isEmpty(datasBean.mAuthor)) {
@@ -333,18 +339,15 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
 
         shineButton.init(_mActivity);
         shineButton.setChecked(datasBean.mCollect);
-        shineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (datasBean.mId!=-1) {
-                    setCollect((ShineButton) view,datasBean.mId);
-                }
+        shineButton.setOnClickListener(view -> {
+            if (datasBean.mId != -1) {
+                setCollect((ShineButton) view, datasBean.mId);
             }
         });
 
         topView.setOnClickListener(view -> {
             if (!TextUtils.isEmpty(datasBean.mTitle) && !TextUtils.isEmpty(datasBean.mLink) && datasBean.mId != -1) {
-                ArticleActivity.actionStartActivity(_mActivity, datasBean.mId, datasBean.mCollect, datasBean.mTitle, datasBean.mLink);
+                ArticleActivity.actionStartActivity(_mActivity, false, datasBean.mCollect, datasBean.mId, datasBean.mTitle, datasBean.mLink);
             } else {
                 showTipMsg(_mActivity.getResources().getString(R.string.get_home_articlelist_failed));
             }
@@ -354,7 +357,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
 
     @Override
     public void showgetHomeArticleTopListFailed() {
-        // TODO: 2019/11/4  加载top库数据失败
+
     }
 
     @Override
@@ -377,13 +380,8 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
     public void onClick(View v) {
         super.onClick(v);
 
-        switch (v.getId()) {
-            case R.id.ib_home_search:
-                // TODO: 2019/10/8 跳转到搜索页面
-                break;
-            case R.id.shine_button:
-
-                break;
+        if (v.getId() == R.id.ib_home_search) {
+            // TODO: 2019/10/8 跳转到搜索页面
         }
 
 
@@ -406,13 +404,13 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
         int articleId = collectionEvent.getArticleId();
         List<HomeListBean.DatasBean> data = mAdapter.getData();
 
-        if (!mHeaderTopItemViews.isEmpty()&&mHeaderTopItemViews.size()==mHeaderTopItemBeans.size()) {
+        if (!mHeaderTopItemViews.isEmpty() && mHeaderTopItemViews.size() == mHeaderTopItemBeans.size()) {
             for (int i = 0; i < mHeaderTopItemBeans.size(); i++) {
                 HomeListBean.DatasBean datasBean = mHeaderTopItemBeans.get(i);
                 if (datasBean.mId == articleId) {
-                    if (datasBean.mCollect !=collectionEvent.isCoolect()) {
+                    if (datasBean.mCollect != collectionEvent.isCoolect()) {
                         datasBean.mCollect = collectionEvent.isCoolect();
-                        bindHeaderTopItem(mHeaderTopItemViews.get(i),datasBean);
+                        bindHeaderTopItem(mHeaderTopItemViews.get(i), datasBean);
                         return;
                     }
                 }
@@ -424,7 +422,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
             if (datasBean.mId == articleId) {
                 datasBean.mCollect = collectionEvent.isCoolect();
                 ShineButton shineButton = (ShineButton) mAdapter.getViewByPosition(i + mAdapter.getHeaderLayoutCount(), R.id.shine_button);
-                if (null==shineButton||shineButton.isChecked()!=collectionEvent.isCoolect()) {
+                if (null == shineButton || shineButton.isChecked() != collectionEvent.isCoolect()) {
                     mAdapter.notifyItemChanged(i + mAdapter.getHeaderLayoutCount());
                 }
             }

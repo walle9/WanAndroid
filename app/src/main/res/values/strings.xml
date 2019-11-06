@@ -33,6 +33,7 @@
     <string name="unknown">xxx</string>
     <string name="successful">请求成功</string>
     <string name="home_page">首页</string>
+    <string name="article_top">置顶</string>
 
 
 </resources>

@@ -49,7 +49,7 @@ public class MyToastStyle extends BaseToastStyle {
 
     @Override
     public float getTextSize() {
-        return sp2px(16);
+        return sp2px(14);
     }
 
     @Override
