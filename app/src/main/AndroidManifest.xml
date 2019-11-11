@@ -48,6 +48,9 @@
         <activity
             android:name=".ui.activity.ArticleActivity"
             android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.activity.SearchActivity"
+            android:launchMode="singleTop" />
 
         <!-- autosize -->
         <meta-data

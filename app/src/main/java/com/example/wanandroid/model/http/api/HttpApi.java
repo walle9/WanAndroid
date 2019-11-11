@@ -119,4 +119,14 @@ public interface HttpApi {
      */
     @POST(ProtocolHttp.UNCOLLECT)
     Observable<HttpNoResult> uncollect(@Path("id") int id);
+
+    /**
+     *  搜索
+     * @param page  页码：拼接在链接上，从0开始。
+     * @param key   搜索关键词
+     * @return
+     */
+    @FormUrlEncoded
+    @POST(ProtocolHttp.QUERYARTICLE)
+    Observable<HttpResult<LoginBean>> queryArticle(@Path("page") int page,@Field("k") String key);
 }

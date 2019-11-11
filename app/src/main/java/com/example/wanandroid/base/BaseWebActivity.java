@@ -3,6 +3,7 @@ package com.example.wanandroid.base;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 
@@ -24,6 +25,8 @@ import com.just.agentweb.PermissionInterceptor;
 import com.just.agentweb.WebChromeClient;
 import com.just.agentweb.WebViewClient;
 import com.orhanobut.logger.Logger;
+
+import java.util.Objects;
 
 /**
  * @ProjectName: WanAndroid
@@ -283,6 +286,8 @@ public abstract class BaseWebActivity extends BaseActivity {
     }
 
 
+
+
     //---------------------------抽象方法,交由子类实现---------------------------
 
     /**
@@ -310,4 +315,8 @@ public abstract class BaseWebActivity extends BaseActivity {
         toolbar.setTitle(title);
     }
 
+    @Override
+    protected boolean isSetNavigationOnClickListener() {
+        return false;
+    }
 }

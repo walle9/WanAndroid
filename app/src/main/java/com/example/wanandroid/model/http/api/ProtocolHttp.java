@@ -22,10 +22,13 @@ public interface ProtocolHttp {
     String GETGIRLLIST = "data/福利/{num}/{page}";                //获取美女图片
 
     String HOMEARTICLELIST = "article/list/{page}/json";        //获取首页文章列表
-    String HOMEARTICLETOPLIST = "article/top/json";        //获取首页至置顶列表
+    String HOMEARTICLETOPLIST = "article/top/json";             //获取首页至置顶列表
     String HOMEBANNER = "banner/json";                          //获取首页banner
     String LOGIN = "user/login";                                //登录
     String COLLECT = "lg/collect/{id}/json";                    //收藏站内文章
     String UNCOLLECT = "lg/uncollect_originId/{id}/json";       //取消收藏
+    String HOTKEY = "hotkey/json";                              //搜索热词
+    String QUERYARTICLE = "article/query/{page}/json";          //文章搜索
+
 
 }

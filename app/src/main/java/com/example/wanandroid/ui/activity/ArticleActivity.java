@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -136,6 +137,9 @@ public class ArticleActivity extends BaseMvpWebActivity<ArticleActivityPresenter
         if (!isBanner) {
             MenuItem item = menu.findItem(R.id.menu_web_collect);
             View actionView = item.getActionView();
+            if (actionView instanceof SearchView) {
+                // TODO: 2019/11/7  
+            }
             mShineButton = actionView.findViewById(R.id.shine_button);
             mShineButton.init(this);
             boolean isCollect = getIntent().getBooleanExtra("isCollect", false);
@@ -210,9 +214,9 @@ public class ArticleActivity extends BaseMvpWebActivity<ArticleActivityPresenter
 
     @Override
     public void showCollectFailed(ShineButton shineButton) {
-        if (shineButton.isChecked()) {
-            shineButton.setChecked(false);
-        }
+            if (shineButton.isChecked()) {
+                shineButton.setChecked(false);
+            }
     }
 
     @Override

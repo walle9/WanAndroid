@@ -27,6 +27,7 @@ import com.example.wanandroid.model.event.LoginEvent;
 import com.example.wanandroid.presenter.FirstTabFragmentPresenter;
 import com.example.wanandroid.ui.activity.ArticleActivity;
 import com.example.wanandroid.ui.activity.LoginActivity;
+import com.example.wanandroid.ui.activity.SearchActivity;
 import com.example.wanandroid.ui.adapter.HomeAdapter;
 import com.example.wanandroid.utils.Constants;
 import com.example.wanandroid.utils.SPUtils;
@@ -381,7 +382,7 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
         super.onClick(v);
 
         if (v.getId() == R.id.ib_home_search) {
-            // TODO: 2019/10/8 跳转到搜索页面
+            SearchActivity.actionStartActivity(_mActivity);
         }
 
 
@@ -408,11 +409,12 @@ public class FirstTabFragment extends BaseMvpFragment<FirstTabFragmentPresenter>
             for (int i = 0; i < mHeaderTopItemBeans.size(); i++) {
                 HomeListBean.DatasBean datasBean = mHeaderTopItemBeans.get(i);
                 if (datasBean.mId == articleId) {
-                    if (datasBean.mCollect != collectionEvent.isCoolect()) {
+
+                    if (collectionEvent.isCoolect()&&datasBean.mCollect != collectionEvent.isCoolect()) {
                         datasBean.mCollect = collectionEvent.isCoolect();
-                        bindHeaderTopItem(mHeaderTopItemViews.get(i), datasBean);
-                        return;
                     }
+                    bindHeaderTopItem(mHeaderTopItemViews.get(i), datasBean);
+                    return;
                 }
             }
         }

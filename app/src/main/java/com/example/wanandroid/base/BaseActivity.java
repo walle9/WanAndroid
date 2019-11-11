@@ -350,7 +350,7 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
     /**
      * 初始化toolbar和toolbar与用户布局之间的分割线
      */
-    private void initToolbarAndSplitLine() {
+    protected void initToolbarAndSplitLine() {
         toolbar = findViewById(R.id.toolbar_base_activity);
         //这里不设置的话,后面再设置不会显示后面的内容
         toolbar.setTitle("");
@@ -361,6 +361,9 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
             //添加默认的返回图标
             Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
             //getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用(14以后可以不用设置)
+            if (isSetNavigationOnClickListener()) {
+                toolbar.setNavigationOnClickListener(view -> myFinish());
+            }
         } else {
             toolbar.setVisibility(View.GONE);
         }
@@ -368,6 +371,14 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
         if (!isShowLineHorizontal()) {
             lineHorizontal.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * 是否注册toolbar返回按钮监听,默认注册.含有webview的页面可以重写此方法
+     * @return true 注册
+     */
+    protected boolean isSetNavigationOnClickListener(){
+        return true;
     }
 
 
@@ -382,5 +393,4 @@ public abstract class BaseActivity extends SwipeBackActivity implements BaseView
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }
-
 }
